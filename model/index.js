@@ -1,5 +1,5 @@
-import TestThing from './TestThingModel'
+import Games from './GamesModel'
 
 export default function (racer) {
-  racer.orm('testThings.*', TestThing)
+  racer.orm('games.*', Games)
 }

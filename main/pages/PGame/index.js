@@ -5,10 +5,10 @@ import './index.styl'
 import Player from './player'
 import Teacher from './teacher'
 
-const PHome = () => {
+const PGame = () => {
   const [user] = useSession('user')
 
   return user.isTeacher ? pug`Teacher` : pug`Player`
 }
 
-export default observer(PHome)
+export default observer(PGame)
