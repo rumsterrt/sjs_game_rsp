@@ -90,7 +90,7 @@ const PLeaderboard = () => {
       View.root
         View.coursesContainer
           View.table
-            Table(dataSource=games columns=columns rowKey=item => item.id)
+            Table(title='Leaderboard' dataSource=games columns=columns rowKey=item => item.id)
   `
 }
 

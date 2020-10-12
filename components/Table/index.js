@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Collapse, Pagination, Row } from '@startupjs/ui'
+import { Collapse, Pagination, Row, H3 } from '@startupjs/ui'
 import { View, Text } from 'react-native'
 import './index.styl'
 
@@ -14,6 +14,7 @@ const CustomTable = ({
   expandedRowKeys,
   expandedRowRender,
   rowKey,
+  title,
   ...props
 }) => {
   const [columnMap, setColumnMap] = useState({})
@@ -29,7 +30,7 @@ const CustomTable = ({
       return null
     }
     const { pages, page, onChangePage } = pagination
-    console.log('pagination', pagination)
+
     return pug`
       Row(align='center')
         Pagination(
@@ -46,21 +47,29 @@ const CustomTable = ({
 
       return pug`
         Collapse(key=index open=isOpen onChange=() => onExpand(!isOpen, row))
-          CollapseHeader(iconPosition='right')
+          CollapseHeader(iconPosition='left')
             View.row(key=index)
-              each column in columns
+              each column, colIndex in columns
                 - const style = columnMap[column.key] ? {align: columnMap[column.key].style} : {}
-                View.data(key=column.key style=style) #{columnMap[column.key] && columnMap[column.key].render(row)}
-          CollapseContent
+                View.data(
+                  key=column.key
+                  style=style
+                  styleName=[{first: colIndex === 0, last:colIndex === columns.length - 1}]
+                ) #{columnMap[column.key] && columnMap[column.key].render(row)}
+          CollapseContent.collapseContent
             =expandedRowRender(row)
     `
     }
 
     return pug`
       Row.row(key=index)
-        each column in columns
+        each column, colIndex in columns
           - const style = columnMap[column.key] ? {align: columnMap[column.key].style} : {}
-          View.data(key=column.key style=style)
+          View.data(
+            key=column.key
+            style=style
+            styleName=[{first: colIndex === 0, last:colIndex === columns.length - 1}]
+          )
             if columnMap[column.key]
               =columnMap[column.key].render(row)
             else
@@ -69,13 +78,16 @@ const CustomTable = ({
   }
 
   return pug`
+    if title
+      Row.header
+        H3 #{title}
     View.tableWrapper
       View.table
         View.head
-          Row.row
-            each column in columns
-              View.headData(key=column.key)
-                Text #{column.title}
+          Row.row.top
+            each column, index in columns
+              View.headData(key=column.key styleName=[{first: index === 0, last:index === columns.length - 1}])
+                Text.headText #{column.title}
         View.body
           each row, index in dataSource
             =renderRow(row, index)

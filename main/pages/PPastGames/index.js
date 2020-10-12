@@ -74,6 +74,7 @@ const PPastGames = () => {
       View.coursesContainer
         View.table
           Table(
+            title='Past games'
             dataSource=games
             columns=columns
             rowKey=item => item.id

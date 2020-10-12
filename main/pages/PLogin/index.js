@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 import { Input, Button, Checkbox, Span } from '@startupjs/ui'
-import { useLoader } from 'components'
+import { useLoader, Logo } from 'components'
 import { observer, emit, useSession } from 'startupjs'
 import axios from 'axios'
 import './index.styl'
@@ -35,7 +35,7 @@ const PLogin = () => {
 
   return pug`
     View.login
-      Span Welcome to RSP!
+      Logo(size=50)
       Span Please enter your name to continue
       View.local
         Span Name

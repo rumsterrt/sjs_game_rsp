@@ -74,7 +74,7 @@ export default observer(() => {
           Text.text You don't have games for now, please create a new one
         View.coursesContainer
           View.table
-            Table(dataSource=items columns=columns rowKey=item => item.id pagination=pagination)
+            Table(title='Games' dataSource=items columns=columns rowKey=item => item.id pagination=pagination)
           Input(name="name" placeholder="Input new game name" value=newGameName onChange=e=>setNewGameName(e.target.value))
           Button(disabled=!newGameName onClick=handleCreateGame) Create game
   `

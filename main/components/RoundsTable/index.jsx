@@ -1,9 +1,18 @@
 import React from 'react'
 import { observer, useDoc, useQuery } from 'startupjs'
 import { Text, View } from 'react-native'
+import { Icon } from '@startupjs/ui'
 import { Table } from 'components'
 import { useQueryTable } from 'main/hooks'
+import { faHandPaper, faHandRock, faHandScissors, faFlag } from '@fortawesome/free-solid-svg-icons'
 import _get from 'lodash/get'
+
+const iconResponseMap = {
+  rock: faHandRock,
+  scissors: faHandScissors,
+  paper: faHandPaper,
+  pass: faFlag
+}
 
 const RoundsTable = (props) => {
   const gameId = props.gameId
@@ -23,6 +32,14 @@ const RoundsTable = (props) => {
     return pug`Text Waiting for players`
   }
 
+  const renderResponse = (response) => {
+    if (!response || !iconResponseMap[response]) {
+      return
+    }
+
+    return pug`Icon(icon=iconResponseMap[response] size=15)`
+  }
+
   const columns = [
     {
       title: 'Index',
@@ -39,18 +56,14 @@ const RoundsTable = (props) => {
       key: 'p1res',
 
       align: 'center',
-      render: (data) => pug`
-        Text.text #{_get(data, 'players[0].response')}
-      `
+      render: (data) => renderResponse(_get(data, 'players[0].response'))
     },
     {
       title: `Player2 (${players[1].name}) response`,
       key: 'p2res',
 
       align: 'center',
-      render: (data) => pug`
-        Text.text #{_get(data, 'players[1].response')}
-      `
+      render: (data) => renderResponse(_get(data, 'players[1].response'))
     },
     {
       title: `Player1 (${players[0].name}) points`,

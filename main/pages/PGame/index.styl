@@ -4,25 +4,24 @@
     display flex
     flex-direction row
     justify-content: space-around
-    .playerField
-        height 200px
-        display: flex
-        justify-content: center
-        align-items: center 
+.info
+    margin-bottom 4u
+.centerText
+    text-align center
+
+.playerField
+    &.right
+        align-items flex-end
 
 .currentPlayerState
+    margin-top 2u
     width auto
-    color blue
-    &._wait
-        color yellow
-        animation-name: shake_hand
-        animation-duration: 2000ms
-        animation-iteration-count: infinite
-        animation-timing-function: linear
+    &.left
+        transform-origin center bottom
+        transform scaleX(-1)
 
 .responseWrapper
-    display flex
-    flex-direction row
+    margin-top 4u
     width 100%
     justify-content space-around
 

@@ -2,25 +2,28 @@
     overflow auto
     width 100%
 
+.header
+  justify-content center
+  align-items  center
+  margin-bottom 2u
+
 .row
+  margin-top 2u
   display flex
   flex-direction row
   align-items center
-  justify-content center
-  //flex 1
+  justify-content space-around
   width 100%
+  &.top
+    margin-top 0
+    margin-bottom 2u
+
+.headText
+  font-size 2u
 
 .data, .headData
   flex 1
   align-items center
-
-.pagination
-  position relative
-  display flex
-  justify-content center
-  align-items center
-  flex-direction row
-  width 32px
-  height 32px
-  border-radius 50%
-  opacity 0.5
+  margin-left 2u
+  &.first
+    margin-left 0

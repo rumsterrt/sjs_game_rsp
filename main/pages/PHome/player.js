@@ -59,12 +59,12 @@ export default observer(() => {
       `
     },
     {
-      title: 'join',
+      title: '',
       key: 'join',
 
       align: 'center',
       render: (data) => pug`
-        Button(onClick=()=>handleJoinGame(data)) #{data.playersIds.includes(user.id)? 'BACK TO GAME' : 'JOIN'}
+        Button(onClick=()=>handleJoinGame(data)) #{data.playersIds.includes(user.id)? 'BACK' : 'JOIN'}
       `
     }
   ]
@@ -86,6 +86,6 @@ export default observer(() => {
           Text.text We don't have any free games, please wait
         View.coursesContainer
           View.table
-            Table(dataSource=games.items columns=columns rowKey=item => item.id pagination=games.pagination)
+            Table(title='Games' dataSource=games.items columns=columns rowKey=item => item.id pagination=games.pagination)
   `
 })

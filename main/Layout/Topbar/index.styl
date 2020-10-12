@@ -6,6 +6,7 @@ _CounterHeight = 20px
 
 .wrapper
   width 100%
+  z-index 1
   position relative
 .root
   color _textColor
@@ -20,4 +21,14 @@ _CounterHeight = 20px
   width 100%
   flex-direction row
   align-items center
-  justify-content: space-between    
+  justify-content: space-between
+
+.menu
+  background white
+  border 1px solid #000
+  border-radius 5px
+  position absolute
+  top 100%
+  left 0
+  &.hide
+    display none
