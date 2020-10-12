@@ -22,7 +22,7 @@
     "start-production": "startupjs start-production"
   },
   "dependencies": {
-    "@fortawesome/free-solid-svg-icons": "^5.12.0",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@startupjs/ui": "^0.23.45",
     "antd": "^4.6.6",
     "axios": "^0.20.0",

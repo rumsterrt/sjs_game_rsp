@@ -103,6 +103,7 @@ export default class GamesModel extends BaseModel {
     const $game = this.scope(`games.${gameId}`)
     await $game.fetch()
     const game = $game.get()
+    console.log('game', game)
     // Check player exists in game
     if (!game.playersIds.includes(playerId)) {
       return
@@ -124,5 +125,8 @@ export default class GamesModel extends BaseModel {
 
     const $round = this.scope(`rounds.${currentRound.id}`)
     $round.setEach(roundNewData)
+    if (roundNewData.winnerId) {
+      $game.setEach({ lastFinishedRoundIndex: currentRound.gameIndex })
+    }
   }
 }

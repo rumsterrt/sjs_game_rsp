@@ -1,16 +1,16 @@
 import React from 'react'
-import { observer, useSession, useQuery, model, emit } from 'startupjs'
+import { observer, useSession, model, emit } from 'startupjs'
 import { Text, View } from 'react-native'
-import { Span, Content, Input, Button } from '@startupjs/ui'
+import { Span, Input, Button } from '@startupjs/ui'
 import { Table } from 'components'
 import moment from 'moment'
+import { useQueryTable } from 'main/hooks'
 import './index.styl'
 
 export default observer(() => {
   const [user] = useSession('user')
-  const [games = [], $games] = useQuery('games', {
-    teacherId: { $in: [user.id] },
-    isFinished: false
+  const [{ items, pagination }, $games] = useQueryTable('games', {
+    query: { teacherId: { $in: [user.id] }, isFinished: false }
   })
   const [newGameName, setNewGameName] = React.useState('')
 
@@ -61,21 +61,20 @@ export default observer(() => {
       name: newGameName,
       isFinished: false,
       createdAt: Date.now(),
-      playersIds: [],
-      currentRoundIndex: 0
+      playersIds: []
     })
     setNewGameName('')
   }
 
   return pug`
-    Content
+    View
       View.root
-        if (!games.length)
+        if (!items.length)
           Span.title Welcome!
           Text.text You don't have games for now, please create a new one
         View.coursesContainer
           View.table
-            Table(dataSource=games columns=columns rowKey=item => item.id)
+            Table(dataSource=items columns=columns rowKey=item => item.id pagination=pagination)
           Input(name="name" placeholder="Input new game name" value=newGameName onChange=e=>setNewGameName(e.target.value))
           Button(disabled=!newGameName onClick=handleCreateGame) Create game
   `

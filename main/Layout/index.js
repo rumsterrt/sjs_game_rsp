@@ -8,18 +8,19 @@ import { Loader } from 'components'
 import Topbar from './Topbar'
 
 export default observer(function ({ children }) {
-  const [{ user, ...rest }] = useLocal('_session')
-  console.log('user', { user, rest })
+  const [{ user }] = useLocal('_session')
+
   if (!user) {
     return pug`
       PLogin
     `
   }
   const main = pug`
-    View
-      Loader
+    View.layout
       Topbar
-      Main.content= children
+      View.wrapper
+        Loader
+        Main.content= children
   `
   return main
 })

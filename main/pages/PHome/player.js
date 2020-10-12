@@ -1,21 +1,32 @@
 import React from 'react'
-import { observer, useSession, useQuery, emit } from 'startupjs'
+import { observer, useSession, emit } from 'startupjs'
 import { Text, View } from 'react-native'
-import { Span, Content, Button } from '@startupjs/ui'
+import { Span, Button } from '@startupjs/ui'
 import { Table } from 'components'
+import { useQueryTable } from 'main/hooks'
 import moment from 'moment'
 import './index.styl'
 
 export default observer(() => {
   const [user] = useSession('user')
-  const [currentGames = []] = useQuery('games', {
-    playersIds: { $in: [user.id] },
-    isFinished: false
-  })
-  const [freeGames = [], $freeGames] = useQuery('games', {
-    $or: [{ playersIds: { $size: 0 } }, { playersIds: { $size: 1 } }],
-    playersIds: { $not: { $in: [user.id] } },
-    isFinished: false
+  const [games = [], $games] = useQueryTable('games', {
+    query: {
+      $or: [
+        {
+          playersIds: { $in: [user.id] }
+        },
+        {
+          $and: [
+            { $or: [{ playersIds: { $size: 0 } }, { playersIds: { $size: 1 } }] },
+            {
+              playersIds: { $not: { $in: [user.id] } }
+            }
+          ]
+        }
+      ],
+      $sort: { playersIds: -1 },
+      isFinished: false
+    }
   })
 
   const columns = [
@@ -60,23 +71,21 @@ export default observer(() => {
 
   const handleJoinGame = (game) => {
     if (!game.playersIds.includes(user.id)) {
-      $freeGames.at(game.id).setEach({
+      $games.at(game.id).setEach({
         playersIds: [...game.playersIds, user.id]
       })
     }
     emit('url', '/game/' + game.id)
   }
 
-  const games = [...currentGames, ...freeGames]
-
   return pug`
-    Content
+    View
       View.root
-        if (!games.length)
+        if (!games.totalCount)
           Span.title Welcome!
           Text.text We don't have any free games, please wait
         View.coursesContainer
           View.table
-            Table(dataSource=games columns=columns rowKey=item => item.id)
+            Table(dataSource=games.items columns=columns rowKey=item => item.id pagination=games.pagination)
   `
 })

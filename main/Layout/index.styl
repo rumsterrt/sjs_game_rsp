@@ -1,10 +1,22 @@
 $menuHeight = 6u
 $logoColor = #FCB69D
 
+.wrapper
+  margin 0 auto
+  width calc(100% - 6u)
+  height 100%
+  +tablet()  
+    width calc(100% - 6u)
+  +wide()  
+    max-width calc(100% - 4u)
+
+.layout
+  background white
+  width 100%
+  min-height 100%
+
 .content
   margin-top 4u
-.sidebar
-  padding-top 2u
 
 .menu
   background-color rgba(black, 0.02)

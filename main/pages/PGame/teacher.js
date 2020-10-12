@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { observer, useSession, useDoc, emit } from 'startupjs'
-import { Content, Button } from '@startupjs/ui'
+import { Button } from '@startupjs/ui'
+import { View } from 'react-native'
 import { withRouter } from 'react-router-native'
 import PGameChronology from '../PGameChronology'
 import './index.styl'
@@ -19,10 +20,10 @@ export default withRouter(
     }, [user, game])
 
     return pug`
-      Content
+      View
         PGameChronology(match=match)
         if !game.isFinished
-          Button(onClick=() => $game.setAsync({isFinished: true})) Finish game
+          Button(onClick=() => $game.setEach({isFinished: true})) Finish game
   `
   })
 )
