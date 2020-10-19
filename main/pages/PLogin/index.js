@@ -1,6 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
-import { Input, Button, Checkbox, Span } from '@startupjs/ui'
+import { Input, Button, Checkbox, Span, Div, Br } from '@startupjs/ui'
 import { useLoader, Logo } from 'components'
 import { observer, emit, useSession } from 'startupjs'
 import axios from 'axios'
@@ -34,15 +33,15 @@ const PLogin = () => {
   }
 
   return pug`
-    View.login
+    Div.login
       Logo(size=50)
       Span Please enter your name to continue
-      View.local
+      Div.local
         Span Name
-        View.row
-          Input(value=name name='name' placeholder='Enter name' onChange=e=>setName(e.target.value))
-        View.row
-          Checkbox(value=isTeacher name='isTeacher' onChange=setIsTeacher label="I'm teacher")
+        Input(value=name name='name' placeholder='Enter name' onChange=e=>setName(e.target.value))
+        Br
+        Checkbox(value=isTeacher name='isTeacher' onChange=setIsTeacher label="I'm teacher")
+        Br
         Button(type='primary' onClick=onSubmit) Enter
     `
 }
