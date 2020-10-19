@@ -32,7 +32,7 @@ const CustomTable = ({
     const { pages, page, onChangePage } = pagination
 
     return pug`
-      Row(align='center')
+      Row.pagination(align='center')
         Pagination(
           page=page
           pages=pages

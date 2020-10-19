@@ -6,7 +6,7 @@ import RoundsTable from 'main/components/RoundsTable'
 import './index.styl'
 
 export default withRouter(
-  observer(({ match }) => {
+  observer(({ match, includeCurrentRound, startFromLastRound }) => {
     const gameId = match.params.gameId
     const [user] = useSession('user')
     const [game] = useDoc('games', gameId)
@@ -27,7 +27,7 @@ export default withRouter(
         View.root
           View.coursesContainer
             View.table
-              RoundsTable(gameId=gameId)
+              RoundsTable(gameId=gameId includeCurrent=includeCurrentRound fromLast=startFromLastRound)
   `
   })
 )

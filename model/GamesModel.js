@@ -4,6 +4,8 @@ import _maxBy from 'lodash/maxBy'
 import _cloneDeep from 'lodash/cloneDeep'
 import _toPairs from 'lodash/toPairs'
 import _difference from 'lodash/difference'
+import _mapValues from 'lodash/mapValues'
+import _omit from 'lodash/omit'
 
 const responseType = {
   rock: 'rock',
@@ -30,32 +32,34 @@ const getWinner = (playersMap) => {
 }
 
 export default class GamesModel extends BaseModel {
-  async getCurrentRound() {
+  createNextRound = async () => {
     const { id: gameId } = this.get()
     const model = this.root
     const $rounds = this.query('rounds', { gameId })
     await $rounds.fetch()
     const rounds = $rounds.get()
+    const prevRound = _maxBy(rounds, (item) => item.gameIndex)
+
+    return this.root.addAsync('rounds', {
+      id: model.id(),
+      gameId,
+      gameIndex: rounds.length,
+      winnerId: null,
+      players: _mapValues(prevRound.players || {}, (item) => _omit(item, ['response']))
+    })
+  }
+
+  getCurrentRound = async () => {
+    const { id: gameId } = this.get()
+    const $rounds = this.query('rounds', { gameId })
+    await $rounds.fetch()
+    const rounds = $rounds.get()
     let round = _maxBy(rounds, (item) => item.gameIndex)
-    const prevRound = !round
-      ? null
-      : round.winnerId
-      ? round
-      : rounds.find((item) => item.gameIndex === round.gameIndex - 1)
-    if (!round || round.winnerId) {
-      round = {
-        id: model.id(),
-        gameId,
-        gameIndex: rounds.length,
-        winnerId: null,
-        players: {}
-      }
-      await this.root.addAsync('rounds', round)
-    }
+    const prevRound = rounds.find((item) => item.gameIndex === round.gameIndex - 1)
     return { currentRound: round, prevRound }
   }
 
-  _calculateRoundResults(game, currentRound, prevRound, player1Id, player2Id) {
+  _calculateRoundResults = (game, currentRound, prevRound, player1Id, player2Id) => {
     const players = _cloneDeep(currentRound.players)
     const response1 = _get(players, `${player1Id}.response`)
     const response2 = _get(players, `${player2Id}.response`)
@@ -97,7 +101,7 @@ export default class GamesModel extends BaseModel {
     }
   }
 
-  async responseCurrentRound(playerId, responseType) {
+  responseCurrentRound = async (playerId, responseType) => {
     const { id: gameId } = this.get()
     const { currentRound, prevRound } = await this.getCurrentRound()
     const $game = this.scope(`games.${gameId}`)

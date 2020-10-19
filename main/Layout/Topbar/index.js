@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { View, Text } from 'react-native'
-import { Menu, Button } from '@startupjs/ui'
+import { Menu, Button, Icon } from '@startupjs/ui'
 import { observer, useLocal, emit } from 'startupjs'
 import { Logo } from 'components'
 import { logout } from 'clientHelpers'
-import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'
+import { faArrowDown, faArrowUp, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import './index.styl'
 
 const MenuItem = Menu.Item
@@ -24,6 +24,8 @@ const menuItems = [
   },
   {
     title: 'Exit',
+    icon: faSignOutAlt,
+    style: { alignSelf: 'center' },
     action: () => logout()
   }
 ]
@@ -35,7 +37,7 @@ const Topbar = () => {
     View.wrapper
       View.root
         View.content
-          Logo
+          Logo(onPress=() => emit('url', '/'))
           Button(
             onClick=() => setMenuOpen(!menuOpen)
             icon=menuOpen?faArrowUp:faArrowDown
@@ -48,7 +50,10 @@ const Topbar = () => {
                   item.action()
                   setMenuOpen(false)
                 }) 
-                  Text #{item.title} 
+                  if item.icon
+                    Icon.currentPlayerState(icon=item.icon size=20 style=item.style)
+                  else
+                    Text #{item.title} 
   `
 }
 

@@ -17,9 +17,12 @@ const iconResponseMap = {
 const RoundsTable = (props) => {
   const gameId = props.gameId
   const [game = {}] = useDoc('games', gameId)
+  const roundQuery = { gameId, $sort: { gameIndex: props.fromLast ? -1 : 1 } }
+  if (!props.includeCurrent) {
+    roundQuery.winnerId = { $ne: null }
+  }
   const [rounds = []] = useQueryTable('rounds', {
-    query: { gameId, winnerId: { $ne: null } },
-    limit: 3
+    query: roundQuery
   })
   console.log('rounds', rounds)
   const [players = []] = useQuery('users', {
@@ -42,7 +45,7 @@ const RoundsTable = (props) => {
 
   const columns = [
     {
-      title: 'Index',
+      title: '',
       key: 'index',
 
       ellipsis: true,
@@ -95,11 +98,13 @@ const RoundsTable = (props) => {
   ]
   const preparedRounds = rounds.items.map((item) => ({
     ...item,
-    winnerName: _get(
-      players.find(({ id }) => id === item.winnerId),
-      'name',
-      'Draw'
-    ),
+    winnerName: item.winnerId
+      ? _get(
+          players.find(({ id }) => id === item.winnerId),
+          'name',
+          'Draw'
+        )
+      : 'Waiting for answers',
     players: players.map((player) => ({ ...item.players[player.id] }))
   }))
   return pug`

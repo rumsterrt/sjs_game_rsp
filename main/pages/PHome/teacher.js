@@ -1,16 +1,16 @@
 import React from 'react'
 import { observer, useSession, model, emit } from 'startupjs'
-import { Text, View } from 'react-native'
-import { Span, Input, Button } from '@startupjs/ui'
+import { Span, Input, Button, Div } from '@startupjs/ui'
 import { Table } from 'components'
 import moment from 'moment'
 import { useQueryTable } from 'main/hooks'
+import _get from 'lodash/get'
 import './index.styl'
 
 export default observer(() => {
   const [user] = useSession('user')
   const [{ items, pagination }, $games] = useQueryTable('games', {
-    query: { teacherId: { $in: [user.id] }, isFinished: false }
+    query: { teacherId: { $in: [user.id] }, isFinished: false, $sort: { playersIds: -1, createdAt: -1 } }
   })
   const [newGameName, setNewGameName] = React.useState('')
 
@@ -22,7 +22,7 @@ export default observer(() => {
       ellipsis: true,
       align: 'center',
       render: (data) => pug`
-        Text.line.text #{data.name}
+        Span.line.text #{data.name}
       `
     },
     {
@@ -31,7 +31,7 @@ export default observer(() => {
 
       align: 'center',
       render: (data) => pug`
-        Text.text #{moment(data.createdAt).format('MM/DD/YYYY')}
+        Span.text #{moment(data.createdAt).format('MM/DD/YYYY')}
       `
     },
     {
@@ -40,11 +40,11 @@ export default observer(() => {
 
       align: 'center',
       render: (data) => pug`
-        Text.line.text #{data.playersIds.length}
+        Span.line.text #{_get(data,'playersIds.length', 0)}
       `
     },
     {
-      title: 'join',
+      title: '',
       key: 'join',
 
       align: 'center',
@@ -55,27 +55,36 @@ export default observer(() => {
   ]
 
   const handleCreateGame = () => {
+    const gameId = model.id()
     $games.add({
-      id: model.id(),
+      id: gameId,
       teacherId: user.id,
       name: newGameName,
       isFinished: false,
       createdAt: Date.now(),
       playersIds: []
     })
+    model.add('rounds', {
+      id: model.id(),
+      gameId,
+      gameIndex: 0,
+      winnerId: null,
+      players: {}
+    })
     setNewGameName('')
   }
 
   return pug`
-    View
-      View.root
+    Div
+      Div.root
         if (!items.length)
           Span.title Welcome!
-          Text.text You don't have games for now, please create a new one
-        View.coursesContainer
-          View.table
-            Table(title='Games' dataSource=items columns=columns rowKey=item => item.id pagination=pagination)
-          Input(name="name" placeholder="Input new game name" value=newGameName onChange=e=>setNewGameName(e.target.value))
-          Button(disabled=!newGameName onClick=handleCreateGame) Create game
+          Span.text You don't have games for now, please create a new one
+        Div.coursesContainer
+          Div.createGameContainer
+            Input.createInput(name="name" placeholder="Input new game name" value=newGameName onChange=e=>setNewGameName(e.target.value))
+            Button(disabled=!newGameName onClick=handleCreateGame) Create game
+          Div.table
+            Table(title='Active Games' dataSource=items columns=columns rowKey=item => item.id pagination=pagination)
   `
 })

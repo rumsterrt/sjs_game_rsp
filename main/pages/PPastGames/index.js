@@ -46,7 +46,7 @@ const PPastGames = () => {
       `
     },
     {
-      title: 'join',
+      title: '',
       key: 'join',
 
       align: 'center',
