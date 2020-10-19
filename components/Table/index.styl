@@ -8,25 +8,61 @@
   margin-bottom 2u
 
 .row
-  margin-top 2u
-  display flex
-  flex-direction row
-  align-items center
-  justify-content space-around
+  display block
+  padding 2u
   width 100%
-  &.top
-    margin-top 0
-    margin-bottom 2u
+  +tablet()
+    display flex
+    flex-direction row
+    align-items center
+    justify-content space-around
+
+.collapse, .row
+  background: #f6f6f6
+  &.odd
+    background #e9e9e9
+  &.head
+    background #27ae60
+  &.secondary
+    background: #ECECEC
+    &.odd
+      background #fff
+    &.head
+      background #2980b9
+
+.collapseContent
+    margin-left 3u
 
 .headText
   font-size 2u
+  font-weight 900
+  color #ffffff
 
 .pagination
   margin-top 4u
 
 .data, .headData
   flex 1
-  align-items center
-  margin-left 2u
+  align-items flex-start
+  margin-top 2u
   &.first
-    margin-left 0
+    margin-top 0
+  +tablet()
+    margin-top 0
+    margin-bottom 0
+    margin-left 2u
+    &.first
+      margin-left 0
+
+.headData
+  display none
+  +tablet()
+    display flex
+
+.mobileHead
+  margin-bottom 1u
+  color #969696
+  font-size 2u
+  font-weight bold
+  +tablet()
+    display none

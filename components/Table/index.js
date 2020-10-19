@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Collapse, Pagination, Row, H3 } from '@startupjs/ui'
-import { View, Text } from 'react-native'
+import { Collapse, Pagination, Row, H3, Div, Span } from '@startupjs/ui'
 import './index.styl'
 
 const CollapseHeader = Collapse.Header
@@ -15,6 +14,7 @@ const CustomTable = ({
   expandedRowRender,
   rowKey,
   title,
+  colorScheme,
   ...props
 }) => {
   const [columnMap, setColumnMap] = useState({})
@@ -46,34 +46,43 @@ const CustomTable = ({
       const isOpen = expandedRowKeys.includes(rowKey(row))
 
       return pug`
-        Collapse(key=index open=isOpen onChange=() => onExpand(!isOpen, row))
+        Collapse.collapse(
+            key=index
+            open=isOpen
+            onChange=() => onExpand(!isOpen, row)
+            styleName=[{[colorScheme]: true}]
+            variant='pure'
+          )
           CollapseHeader(iconPosition='left')
-            View.row(key=index)
+            Div.row(key=index styleName=[{odd: index%2 > 0}])
               each column, colIndex in columns
                 - const style = columnMap[column.key] ? {align: columnMap[column.key].style} : {}
-                View.data(
+                Div.data(
                   key=column.key
                   style=style
                   styleName=[{first: colIndex === 0, last:colIndex === columns.length - 1}]
-                ) #{columnMap[column.key] && columnMap[column.key].render(row)}
+                ) 
+                  Span.mobileHead #{column.title}
+                  =columnMap[column.key] && columnMap[column.key].render(row)
           CollapseContent.collapseContent
             =expandedRowRender(row)
     `
     }
 
     return pug`
-      Row.row(key=index)
+      Row.row(key=index styleName=[{odd: index%2 > 0, [colorScheme]: true}])
         each column, colIndex in columns
           - const style = columnMap[column.key] ? {align: columnMap[column.key].style} : {}
-          View.data(
+          Div.data(
             key=column.key
             style=style
             styleName=[{first: colIndex === 0, last:colIndex === columns.length - 1}]
           )
+            Span.mobileHead #{column.title}
             if columnMap[column.key]
               =columnMap[column.key].render(row)
             else
-              Text ...
+              Span ...
     `
   }
 
@@ -81,14 +90,14 @@ const CustomTable = ({
     if title
       Row.header
         H3 #{title}
-    View.tableWrapper
-      View.table
-        View.head
-          Row.row.top
+    Div.tableWrapper
+      Div.table
+        Div.head
+          Row.row.head(styleName=[{[colorScheme]: true}])
             each column, index in columns
-              View.headData(key=column.key styleName=[{first: index === 0, last:index === columns.length - 1}])
-                Text.headText #{column.title}
-        View.body
+              Div.headData(key=column.key)
+                Span.headText #{column.title}
+        Div.body
           each row, index in dataSource
             =renderRow(row, index)
       =renderPagination()

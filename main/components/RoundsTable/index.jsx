@@ -1,11 +1,12 @@
 import React from 'react'
 import { observer, useDoc, useQuery } from 'startupjs'
-import { Text, View } from 'react-native'
-import { Icon } from '@startupjs/ui'
+import { Icon, Span } from '@startupjs/ui'
 import { Table } from 'components'
 import { useQueryTable } from 'main/hooks'
 import { faHandPaper, faHandRock, faHandScissors, faFlag } from '@fortawesome/free-solid-svg-icons'
 import _get from 'lodash/get'
+
+import './index.styl'
 
 const iconResponseMap = {
   rock: faHandRock,
@@ -32,7 +33,7 @@ const RoundsTable = (props) => {
     return null
   }
   if (game.playersIds.length < 2) {
-    return pug`Text Waiting for players`
+    return pug`Span Waiting for players`
   }
 
   const renderResponse = (response) => {
@@ -51,7 +52,7 @@ const RoundsTable = (props) => {
       ellipsis: true,
       align: 'center',
       render: (data) => pug`
-        Text.line.text #{data.gameIndex + 1}
+        Span.name Round #{data.gameIndex + 1}
       `
     },
     {
@@ -74,7 +75,7 @@ const RoundsTable = (props) => {
 
       align: 'center',
       render: (data) => pug`
-        Text.text #{_get(data, 'players[0].points')}
+        Span #{_get(data, 'players[0].points')}
       `
     },
     {
@@ -83,7 +84,7 @@ const RoundsTable = (props) => {
 
       align: 'center',
       render: (data) => pug`
-        Text.text #{_get(data, 'players[1].points')}
+        Span #{_get(data, 'players[1].points')}
       `
     },
     {
@@ -92,7 +93,7 @@ const RoundsTable = (props) => {
 
       align: 'center',
       render: (data) => pug`
-        Text.text #{data.winnerName}
+        Span #{data.winnerName}
       `
     }
   ]
@@ -100,16 +101,15 @@ const RoundsTable = (props) => {
     ...item,
     winnerName: item.winnerId
       ? _get(
-          players.find(({ id }) => id === item.winnerId),
-          'name',
-          'Draw'
-        )
+        players.find(({ id }) => id === item.winnerId),
+        'name',
+        'Draw'
+      )
       : 'Waiting for answers',
     players: players.map((player) => ({ ...item.players[player.id] }))
   }))
   return pug`
-    View.table
-      Table(dataSource=preparedRounds columns=columns rowKey=item => item.id pagination=rounds.pagination)
+    Table(dataSource=preparedRounds columns=columns rowKey=item => item.id pagination=rounds.pagination colorScheme='secondary')
   `
 }
 

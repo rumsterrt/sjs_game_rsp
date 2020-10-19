@@ -1,7 +1,6 @@
 import React from 'react'
 import { observer, useSession, useQuery, useValue } from 'startupjs'
-import { Text, View } from 'react-native'
-import { Button } from '@startupjs/ui'
+import { Div, Span } from '@startupjs/ui'
 import { Table } from 'components'
 import RoundsTable from 'main/components/RoundsTable'
 import moment from 'moment'
@@ -24,7 +23,7 @@ const PPastGames = () => {
       ellipsis: true,
       align: 'center',
       render: (data) => pug`
-        Text.line.text #{data.name}
+        Span.line.text #{data.name}
       `
     },
     {
@@ -33,7 +32,7 @@ const PPastGames = () => {
 
       align: 'center',
       render: (data) => pug`
-        Text.text #{moment(data.createdAt).format('MM/DD/YYYY')}
+        Span.text #{moment(data.createdAt).format('MM/DD/YYYY')}
       `
     },
     {
@@ -42,16 +41,7 @@ const PPastGames = () => {
 
       align: 'center',
       render: (data) => pug`
-        Text.line.text #{data.playersIds.length}
-      `
-    },
-    {
-      title: '',
-      key: 'join',
-
-      align: 'center',
-      render: (data) => pug`
-        Button(onClick=()=>data.id) JOIN
+        Span.line.text #{data.playersIds.length}
       `
     }
   ]
@@ -70,9 +60,9 @@ const PPastGames = () => {
   }
 
   return pug`
-    View.root
-      View.coursesContainer
-        View.table
+    Div.root
+      Div.coursesContainer
+        Div.table
           Table(
             title='Past games'
             dataSource=games

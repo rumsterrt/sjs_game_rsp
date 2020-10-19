@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text } from 'react-native'
-import { Menu, Button, Icon } from '@startupjs/ui'
+import { Menu, Button, Icon, Span, Div, Row } from '@startupjs/ui'
 import { observer, useLocal, emit } from 'startupjs'
 import { Logo } from 'components'
 import { logout } from 'clientHelpers'
@@ -34,9 +33,9 @@ const Topbar = () => {
   const [{ user }] = useLocal('_session')
   const [menuOpen, setMenuOpen] = useState(false)
   return pug`
-    View.wrapper
-      View.root
-        View.content
+    Div.wrapper
+      Div.root
+        Div.content
           Logo(onPress=() => emit('url', '/'))
           Button(
             onClick=() => setMenuOpen(!menuOpen)
@@ -49,11 +48,12 @@ const Topbar = () => {
                 MenuItem.menuItem(key=item.title onPress=() => {
                   item.action()
                   setMenuOpen(false)
-                }) 
-                  if item.icon
-                    Icon.currentPlayerState(icon=item.icon size=20 style=item.style)
-                  else
-                    Text #{item.title} 
+                })
+                  Row(align='between')
+                    Span #{item.title} 
+                    if item.icon
+                      Icon.currentPlayerState(icon=item.icon size=20 style=item.style)
+                    
   `
 }
 

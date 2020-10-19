@@ -37,7 +37,7 @@ const Wrapper =
   Platform.OS === 'web'
     ? React.memo(({ children }) => children)
     : React.memo(
-        ({ children }) => pug`
-    SafeAreaView.page(style={ flex: 1, backgroundColor: '#fff' })= children
+      ({ children }) => pug`
+        SafeAreaView.page(style={ flex: 1, backgroundColor: '#fff' })= children
   `
-      )
+    )
