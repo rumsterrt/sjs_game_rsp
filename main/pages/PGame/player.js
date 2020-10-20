@@ -34,14 +34,13 @@ export default withRouter(
       $limit: 1
     })
     const round = rounds && rounds.length > 0 ? rounds[0] : {}
-    console.log('game', { game, round })
 
     useEffect(() => {
       if (!game.id) {
         return
       }
       setEnemyId(game.playersIds.find((item) => item !== user.id))
-    }, [game.id])
+    }, [JSON.stringify(game)])
 
     useEffect(() => {
       if (user.id === game.teacherId || !game.playersIds || game.playersIds.includes(user.id)) {
@@ -49,6 +48,10 @@ export default withRouter(
       }
       emit('url', '/')
     }, [user, game])
+
+    if (game.isFinished) {
+      return pug`Span.centerText Game already finished`
+    }
 
     const handleResponse = async (responseType) => {
       await $game.responseCurrentRound(user.id, responseType)
@@ -67,7 +70,10 @@ export default withRouter(
       const icon = isMe || _get(round, `players.${user.id}.response`) ? iconResponseMap[response] : faQuestionCircle
 
       return pug`
-        Icon.currentPlayerState(icon=icon styleName=[{left: isMe}])
+        Icon.currentPlayerState(
+          icon=icon
+          style={transform: [{scaleX: isMe ? -1 : 1}]}
+        )
       `
     }
 
@@ -80,23 +86,28 @@ export default withRouter(
         Div.info
           Row.titleContainer
             H3.centerText #{game.name}
-            Button(size='35' variant='text' icon=faListAlt onClick=handleMoveToChronology)
-          H4.centerText Round #{round.gameIndex + 1}
-          H5.centerText Points #{points}
-        Div.gameField
-          Div.playerField
-            Span #{'You'}
-            =renderPlayerState(true)
-          if round.winnerId
-            Span #{round.winnerId === user.id ? 'YOU WIN' : round.winnerId==='draw' ? 'DRAW' : 'YOU LOSE' }
-          Div.playerField.right
-            Span #{enemy.name}
-            =renderPlayerState()
-        Row.responseWrapper(vAlign='center' align='around')
-          Button(disabled=hasResponse size='40' variant='text' icon=faHandScissors onClick=()=>handleResponse('scissors'))
-          Button(disabled=hasResponse size='40' variant='text' icon=faHandRock onClick=()=>handleResponse('rock'))
-          Button(disabled=hasResponse size='40' variant='text' icon=faHandPaper onClick=()=>handleResponse('paper'))
-          Button(disabled=hasResponse size='40' variant='text' icon=faFlag onClick=()=>handleResponse('pass') color='red')
+            if enemyId
+              Button.chronologyButton(size=35 variant='text' icon=faListAlt onClick=handleMoveToChronology)
+          if enemyId
+            H4.centerText Round #{round.gameIndex + 1}
+            H5.centerText Points #{points}
+          else
+            Span.centerText Wait your opponent
+        if enemyId
+          Div.gameField
+            Div.playerField
+              Span You
+              =renderPlayerState(true)
+            if round.winnerId
+              Span #{round.winnerId === user.id ? 'YOU WIN' : round.winnerId==='draw' ? 'DRAW' : 'YOU LOSE' }
+            Div.playerField.right
+              Span #{enemy.name}
+              =renderPlayerState()
+          Row.responseWrapper(vAlign='center' align='around')
+            Button(disabled=hasResponse size='40' variant='text' icon=faHandScissors onClick=()=>handleResponse('scissors'))
+            Button(disabled=hasResponse size='40' variant='text' icon=faHandRock onClick=()=>handleResponse('rock'))
+            Button(disabled=hasResponse size='40' variant='text' icon=faHandPaper onClick=()=>handleResponse('paper'))
+            Button(disabled=hasResponse size='40' variant='text' icon=faFlag onClick=()=>handleResponse('pass') color='red')
   `
   })
 )

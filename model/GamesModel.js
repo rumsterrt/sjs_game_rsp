@@ -107,7 +107,7 @@ export default class GamesModel extends BaseModel {
     const $game = this.scope(`games.${gameId}`)
     await $game.fetch()
     const game = $game.get()
-    console.log('game', game)
+
     // Check player exists in game
     if (!game.playersIds.includes(playerId)) {
       return

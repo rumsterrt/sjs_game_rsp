@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { observer, useDoc, emit, useSession } from 'startupjs'
-import { Text, View } from 'react-native'
+import { Span } from '@startupjs/ui'
 import { withRouter } from 'react-router-native'
 import RoundsTable from 'main/components/RoundsTable'
 import './index.styl'
@@ -19,15 +19,11 @@ export default withRouter(
     }, [user, game])
 
     if (game.playersIds.length < 2) {
-      return pug`Text Waiting for players`
+      return pug`Span Waiting for players`
     }
 
     return pug`
-      View
-        View.root
-          View.coursesContainer
-            View.table
-              RoundsTable(gameId=gameId includeCurrent=includeCurrentRound fromLast=startFromLastRound)
+      RoundsTable(gameId=gameId includeCurrent=includeCurrentRound fromLast=startFromLastRound)
   `
   })
 )

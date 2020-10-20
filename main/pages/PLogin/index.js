@@ -22,7 +22,7 @@ const PLogin = () => {
         isTeacher,
         name
       })
-      console.log('data', data)
+
       $user.set(data)
       window.location.href += ''
     } catch (err) {

@@ -29,8 +29,8 @@ export default withRouter(
         H3.centerText #{game.name}
         PGameChronology(match=match includeCurrentRound startFromLastRound)
         Div.teacherButtons
-          Button.teacherButton(disabled=!round.winnerId onClick=() => $game.createNextRound()) Next round
-          Button.teacherButton.last(disabled=game.isFinished onClick=() => $game.setEach({isFinished: true})) Finish game
+          Button.teacherButton(disabled=!round.winnerId || game.isFinished onClick=() => $game.createNextRound()) Next round
+          Button.teacherButton.last(disabled=game.isFinished || !round.winnerId onClick=() => $game.setEach({isFinished: true})) Finish game
   `
   })
 )

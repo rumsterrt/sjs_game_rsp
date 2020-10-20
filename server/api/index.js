@@ -8,14 +8,14 @@ const router = express.Router()
 router.post(
   '/enter',
   runHttpHandler(async (req) => {
-    console.log('/enter')
     const { model } = req
     const { name, isTeacher } = req.body
     const $users = model.query('users', { name, isTeacher })
     await $users.fetch()
-    console.log('users get', $users.get())
+
     let user = ($users.get() || [])[0]
     await $users.unfetch()
+
     if (!user) {
       const id = model.id()
       user = {
@@ -23,10 +23,9 @@ router.post(
         name,
         isTeacher
       }
-      const res = await model.add('users', user)
-      console.log('res', res)
+      await model.add('users', user)
     }
-    console.log('user', user)
+
     req.session.userId = user.id
     req.session.loggedIn = true
 

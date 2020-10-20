@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer, useQuery } from 'startupjs'
-import { Text, View } from 'react-native'
+import { Span } from '@startupjs/ui'
 import { Table } from 'components'
 import './index.styl'
 
@@ -63,34 +63,28 @@ const PLeaderboard = () => {
       }
     ]
   })
-  console.log('games', games)
+
   const columns = [
     {
       title: 'Name',
       key: 'name',
-
       ellipsis: true,
       align: 'center',
       render: (data) => pug`
-        Text.line.text #{data._id}
+        Span #{data._id}
       `
     },
     {
       title: 'Total score',
       key: 'totalAmount',
-
       align: 'center',
       render: (data) => pug`
-        Text.text #{data.totalAmount}
+        Span #{data.totalAmount}
       `
     }
   ]
   return pug`
-    View
-      View.root
-        View.coursesContainer
-          View.table
-            Table(title='Leaderboard' dataSource=games columns=columns rowKey=item => item.id)
+    Table(title='Leaderboard' dataSource=games columns=columns rowKey=item => item.id)
   `
 }
 

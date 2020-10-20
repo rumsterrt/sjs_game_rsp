@@ -1,9 +1,11 @@
 .root
     height 100%
+    display flex
+    justify-content space-between
 
 .titleContainer
     width 100%
-    justify-content space-between
+    justify-content center
     align-items center
 
 .teacherButtons
@@ -27,7 +29,7 @@
     flex-direction row
     justify-content: space-around
 .info
-    margin-bottom 4u
+    margin-bottom 2u
 .centerText
     text-align center
     margin-bottom 2u
@@ -43,15 +45,16 @@
     width 20vw
     +tablet()
         width 15vw
-    &.left
-        transform-origin center bottom
-        transform scaleX(-1)
 
 .responseWrapper
     margin-top 4u
     margin-bottom 6u
     width 100%
     justify-content space-around
+
+.chronologyButton
+    position absolute
+    right 0
 
 @keyframes shake_hand
   from

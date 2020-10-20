@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer, useSession, model, emit } from 'startupjs'
-import { Span, Input, Button, Div } from '@startupjs/ui'
+import { Span, Input, Button, Div, H3, H4 } from '@startupjs/ui'
 import { Table } from 'components'
 import moment from 'moment'
 import { useQueryTable } from 'main/hooks'
@@ -77,13 +77,13 @@ export default observer(() => {
   return pug`
     Div
       Div.root
-        if (!items.length)
-          Span.title Welcome!
-          Span.text You don't have games for now, please create a new one
-        Div.coursesContainer
-          Div.createGameContainer
-            Input.createInput(name="name" placeholder="Input new game name" value=newGameName onChange=e=>setNewGameName(e.target.value))
-            Button(disabled=!newGameName onClick=handleCreateGame) Create game
+        if !items.length
+          H3.centerText Welcome!
+          H4.centerText You don't have games for now, please create a new one
+        Div.createGameContainer
+          Input.createInput(name="name" placeholder="Input new game name" value=newGameName onChange=e=>setNewGameName(e.target.value))
+          Button(disabled=!newGameName onClick=handleCreateGame) Create game
+        if items.length
           Div.table
             Table(title='Active Games' dataSource=items columns=columns rowKey=item => item.id pagination=pagination)
   `

@@ -50,13 +50,6 @@ const PPastGames = () => {
 
   const handleExpand = (expanded, record) => {
     $expandedGameId.set(expanded ? record.id : null)
-    console.log('onExpand', {
-      expandedGameId,
-      expanded,
-      record,
-      newId: expanded ? record.id : null,
-      get: $expandedGameId.get()
-    })
   }
 
   return pug`

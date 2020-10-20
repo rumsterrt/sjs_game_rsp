@@ -1,7 +1,6 @@
 import React from 'react'
 import { observer, useSession, emit } from 'startupjs'
-import { Text, View } from 'react-native'
-import { Span, Button } from '@startupjs/ui'
+import { Span, Button, Div } from '@startupjs/ui'
 import { Table } from 'components'
 import { useQueryTable } from 'main/hooks'
 import moment from 'moment'
@@ -37,7 +36,7 @@ export default observer(() => {
       ellipsis: true,
       align: 'center',
       render: (data) => pug`
-        Text.line.text #{data.name}
+        Span #{data.name}
       `
     },
     {
@@ -46,7 +45,7 @@ export default observer(() => {
 
       align: 'center',
       render: (data) => pug`
-        Text.text #{moment(data.createdAt).format('MM/DD/YYYY')}
+        Span #{moment(data.createdAt).format('MM/DD/YYYY')}
       `
     },
     {
@@ -55,13 +54,12 @@ export default observer(() => {
 
       align: 'center',
       render: (data) => pug`
-        Text.line.text #{data.playersIds.length}
+        Span #{data.playersIds.length}
       `
     },
     {
       title: '',
       key: 'join',
-
       align: 'center',
       render: (data) => pug`
         Button(onClick=()=>handleJoinGame(data)) #{data.playersIds.includes(user.id)? 'BACK' : 'JOIN'}
@@ -79,13 +77,11 @@ export default observer(() => {
   }
 
   return pug`
-    View
-      View.root
-        if (!games.totalCount)
-          Span.title Welcome!
-          Text.text We don't have any free games, please wait
-        View.coursesContainer
-          View.table
-            Table(title='Games' dataSource=games.items columns=columns rowKey=item => item.id pagination=games.pagination)
+    Div.root
+      if (!games.totalCount)
+        Span.title Welcome!
+        Span.text We don't have any free games, please wait
+      else
+        Table(title='Games' dataSource=games.items columns=columns rowKey=item => item.id pagination=games.pagination)
   `
 })

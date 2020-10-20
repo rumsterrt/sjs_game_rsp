@@ -50,7 +50,7 @@ const CustomTable = ({
             key=index
             open=isOpen
             onChange=() => onExpand(!isOpen, row)
-            styleName=[{[colorScheme]: true}]
+            styleName=[{[colorScheme]: true, odd: index%2 > 0}]
             variant='pure'
           )
           CollapseHeader(iconPosition='left')
@@ -61,7 +61,7 @@ const CustomTable = ({
                   key=column.key
                   style=style
                   styleName=[{first: colIndex === 0, last:colIndex === columns.length - 1}]
-                ) 
+                )
                   Span.mobileHead #{column.title}
                   =columnMap[column.key] && columnMap[column.key].render(row)
           CollapseContent.collapseContent
