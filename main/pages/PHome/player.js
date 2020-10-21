@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer, useSession, emit } from 'startupjs'
-import { Span, Button, Div } from '@startupjs/ui'
+import { Span, Button } from '@startupjs/ui'
 import { Table } from 'components'
 import { useQueryTable } from 'main/hooks'
 import moment from 'moment'
@@ -25,7 +25,6 @@ export default observer(() => {
               ]
             }
           ],
-          $sort: { playersIds: -1 },
           isFinished: false
         }
       },
@@ -45,7 +44,10 @@ export default observer(() => {
           as: 'teacher'
         }
       },
-      { $unwind: { path: '$teacher' } }
+      { $unwind: { path: '$teacher' } },
+      {
+        $sort: { playersIds: -1 }
+      }
     ]
   })
 
@@ -97,11 +99,10 @@ export default observer(() => {
   }
 
   return pug`
-    Div.root
-      if (!games.totalCount)
-        Span.title Welcome!
-        Span.text We don't have any free games, please wait
-      else
-        Table(title='Games' dataSource=games.items columns=columns rowKey=item => item._id pagination=games.pagination)
+    if (!games.totalCount)
+      Span.title Welcome!
+      Span.text We don't have any free games, please wait
+    else
+      Table(title='Games' dataSource=games.items columns=columns rowKey=item => item._id pagination=games.pagination)
   `
 })
