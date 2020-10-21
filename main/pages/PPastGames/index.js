@@ -46,7 +46,10 @@ const PPastGames = () => {
     }
   ]
 
-  const rowExpandRender = (record) => pug`RoundsTable(gameId=expandedGameId)`
+  const rowExpandRender = (record) => pug`
+    if expandedGameId
+      RoundsTable(gameId=expandedGameId)
+  `
 
   const handleExpand = (expanded, record) => {
     $expandedGameId.set(expanded ? record.id : null)

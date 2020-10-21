@@ -25,7 +25,7 @@ const RoundsTable = (props) => {
   const [rounds = []] = useQueryTable('rounds', {
     query: roundQuery
   })
-  console.log('rounds', rounds)
+
   const [players = []] = useQuery('users', {
     _id: { $in: game.playersIds }
   })

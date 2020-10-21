@@ -1,7 +1,7 @@
 import React from 'react'
 import { useQuery } from 'startupjs'
 
-export default (collection, { query = {}, limit = 3, initPage = 0 }) => {
+export default (collection, { query = {}, limit = 10, initPage = 0 }) => {
   const [currentPage, setCurrentPage] = React.useState(initPage)
   const [data = [], $data] = useQuery(collection, {
     ...query,
