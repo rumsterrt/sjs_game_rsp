@@ -1,17 +1,17 @@
 import React from 'react'
-import { observer, useSession, useQuery, useValue } from 'startupjs'
+import { observer, useSession, useValue } from 'startupjs'
 import { Div, Span } from '@startupjs/ui'
 import { Table } from 'components'
 import RoundsTable from 'main/components/RoundsTable'
 import moment from 'moment'
+import { useQueryTable } from 'main/hooks'
 import './index.styl'
 
 const PPastGames = () => {
   const [user] = useSession('user')
   const query = user.isTeacher ? { teacherId: { $in: [user.id] } } : { playersIds: { $in: [user.id] } }
-  const [games = []] = useQuery('games', {
-    ...query,
-    isFinished: true
+  const [games = []] = useQueryTable('games', {
+    query: { ...query, isFinished: true }
   })
   const [expandedGameId, $expandedGameId] = useValue()
 
@@ -61,7 +61,8 @@ const PPastGames = () => {
         Div.table
           Table(
             title='Past games'
-            dataSource=games
+            dataSource=games.items
+            pagination=games.pagination
             columns=columns
             rowKey=item => item.id
             expandedRowKeys=expandedGameId?[expandedGameId]:[]

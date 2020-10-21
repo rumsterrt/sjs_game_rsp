@@ -1,12 +1,19 @@
 import React from 'react'
-import { observer, useQuery } from 'startupjs'
+import { observer } from 'startupjs'
 import { Span } from '@startupjs/ui'
 import { Table } from 'components'
+import { useQueryTable } from 'main/hooks'
 import './index.styl'
 
+const LIMIT = 10
+
 const PLeaderboard = () => {
-  const [games = []] = useQuery('users', {
-    $aggregate: [
+  const [users] = useQueryTable('users', {
+    limit: LIMIT,
+    query: [
+      {
+        $match: { $expr: { $eq: ['$isTeacher', false] } }
+      },
       {
         $lookup: {
           from: 'games',
@@ -23,7 +30,7 @@ const PLeaderboard = () => {
           as: 'game'
         }
       },
-      { $unwind: { path: '$game' } },
+      { $unwind: { path: '$game', preserveNullAndEmptyArrays: true } },
       {
         $lookup: {
           from: 'rounds',
@@ -40,17 +47,18 @@ const PLeaderboard = () => {
           as: 'round'
         }
       },
-      { $unwind: { path: '$round' } },
+
+      { $unwind: { path: '$round', preserveNullAndEmptyArrays: true } },
       {
         $addFields: {
           scores: { $objectToArray: '$round.players' }
         }
       },
       {
-        $unwind: '$scores'
+        $unwind: { path: '$scores', preserveNullAndEmptyArrays: true }
       },
       {
-        $match: { $expr: { $eq: ['$_id', '$scores.k'] } }
+        $match: { $expr: { $or: [{ $eq: ['$_id', '$scores.k'] }, { $eq: ['$scores', null] }] } }
       },
       {
         $group: {
@@ -66,10 +74,16 @@ const PLeaderboard = () => {
 
   const columns = [
     {
+      title: 'Position',
+      key: 'position',
+      align: 'center',
+      render: (data, index, pagination) => pug`
+        Span #{index + 1 + LIMIT * pagination.page}
+      `
+    },
+    {
       title: 'Name',
       key: 'name',
-      ellipsis: true,
-      align: 'center',
       render: (data) => pug`
         Span #{data._id}
       `
@@ -77,14 +91,13 @@ const PLeaderboard = () => {
     {
       title: 'Total score',
       key: 'totalAmount',
-      align: 'center',
       render: (data) => pug`
         Span #{data.totalAmount}
       `
     }
   ]
   return pug`
-    Table(title='Leaderboard' dataSource=games columns=columns rowKey=item => item.id)
+    Table(title='Leaderboard' dataSource=users.items columns=columns rowKey=item => item._id pagination=users.pagination)
   `
 }
 

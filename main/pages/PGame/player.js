@@ -17,7 +17,8 @@ import './index.styl'
 const iconResponseMap = {
   rock: faHandRock,
   scissors: faHandScissors,
-  paper: faHandPaper
+  paper: faHandPaper,
+  pass: faFlag
 }
 
 export default withRouter(
@@ -67,7 +68,7 @@ export default withRouter(
         `
       }
 
-      const icon = isMe || _get(round, `players.${user.id}.response`) ? iconResponseMap[response] : faQuestionCircle
+      const icon = (isMe || round.winnerId) && response ? iconResponseMap[response] : faQuestionCircle
 
       return pug`
         Icon.currentPlayerState(
