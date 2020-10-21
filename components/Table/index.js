@@ -56,10 +56,8 @@ const CustomTable = ({
           CollapseHeader(iconPosition='left')
             Div.row(key=index styleName=[{odd: index%2 > 0}])
               each column, colIndex in columns
-                - const style = columnMap[column.key] ? {alignItems: columnMap[column.key].align} : {}
                 Div.data(
                   key=column.key
-                  style=style
                   styleName=[{first: colIndex === 0, last:colIndex === columns.length - 1}]
                 )
                   Span.mobileHead #{column.title}
@@ -72,10 +70,8 @@ const CustomTable = ({
     return pug`
       Row.row(key=index styleName=[{odd: index%2 > 0, [colorScheme]: true}])
         each column, colIndex in columns
-          - const style = columnMap[column.key] ? {alignItems: columnMap[column.key].align} : {}
           Div.data(
             key=column.key
-            style=style
             styleName=[{first: colIndex === 0, last:colIndex === columns.length - 1}]
           )
             Span.mobileHead #{column.title}
@@ -95,8 +91,7 @@ const CustomTable = ({
         Div.head
           Row.row.head(styleName=[{[colorScheme]: true}])
             each column, index in columns
-              - const style = columnMap[column.key] ? {alignItems: columnMap[column.key].align} : {}
-              Div.headData(key=column.key style=style styleName=[{first: index === 0, last: index === columns.length - 1}])
+              Div.headData(key=column.key styleName=[{first: index === 0, last: index === columns.length - 1, expanded: !!expandedRowKeys }])
                 Span.headText #{column.title}
         Div.body
           each row, index in dataSource

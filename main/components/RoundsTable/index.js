@@ -48,9 +48,6 @@ const RoundsTable = (props) => {
     {
       title: '',
       key: 'index',
-
-      ellipsis: true,
-      align: 'center',
       render: (data) => pug`
         Span.name Round #{data.gameIndex + 1}
       `
@@ -58,22 +55,16 @@ const RoundsTable = (props) => {
     {
       title: `Player1 (${players[0].name}) response`,
       key: 'p1res',
-
-      align: 'center',
       render: (data) => renderResponse(_get(data, 'players[0].response'))
     },
     {
       title: `Player2 (${players[1].name}) response`,
       key: 'p2res',
-
-      align: 'center',
       render: (data) => renderResponse(_get(data, 'players[1].response'))
     },
     {
       title: `Player1 (${players[0].name}) points`,
       key: 'p1points',
-
-      align: 'center',
       render: (data) => pug`
         Span #{_get(data, 'players[0].points')}
       `
@@ -81,8 +72,6 @@ const RoundsTable = (props) => {
     {
       title: `Player2 (${players[1].name}) points`,
       key: 'p2points',
-
-      align: 'center',
       render: (data) => pug`
         Span #{_get(data, 'players[1].points')}
       `
@@ -90,8 +79,6 @@ const RoundsTable = (props) => {
     {
       title: 'Winner',
       key: 'winner',
-
-      align: 'center',
       render: (data) => pug`
         Span #{data.winnerName}
       `
@@ -101,10 +88,10 @@ const RoundsTable = (props) => {
     ...item,
     winnerName: item.winnerId
       ? _get(
-        players.find(({ id }) => id === item.winnerId),
-        'name',
-        'Draw'
-      )
+          players.find(({ id }) => id === item.winnerId),
+          'name',
+          'Draw'
+        )
       : 'Waiting for answers',
     players: players.map((player) => ({ ...item.players[player.id] }))
   }))

@@ -76,7 +76,6 @@ const PLeaderboard = () => {
     {
       title: 'Position',
       key: 'position',
-      align: 'center',
       render: (data, index, pagination) => pug`
         Span #{index + 1 + LIMIT * pagination.page}
       `

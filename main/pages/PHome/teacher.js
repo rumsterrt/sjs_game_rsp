@@ -18,9 +18,6 @@ export default observer(() => {
     {
       title: 'Name',
       key: 'name',
-
-      ellipsis: true,
-      align: 'center',
       render: (data) => pug`
         Span.line.text #{data.name}
       `
@@ -28,8 +25,6 @@ export default observer(() => {
     {
       title: 'Created At',
       key: 'age',
-
-      align: 'center',
       render: (data) => pug`
         Span.text #{moment(data.createdAt).format('MM/DD/YYYY')}
       `
@@ -37,8 +32,6 @@ export default observer(() => {
     {
       title: 'Players count',
       key: 'playersCount',
-
-      align: 'center',
       render: (data) => pug`
         Span.line.text #{_get(data,'playersIds.length', 0)}
       `
@@ -46,8 +39,6 @@ export default observer(() => {
     {
       title: '',
       key: 'join',
-
-      align: 'center',
       render: (data) => pug`
         Button(onClick=()=>emit('url', '/game/' + data.id)) JOIN
       `

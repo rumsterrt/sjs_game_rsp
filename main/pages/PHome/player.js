@@ -9,41 +9,64 @@ import './index.styl'
 export default observer(() => {
   const [user] = useSession('user')
   const [games = [], $games] = useQueryTable('games', {
-    query: {
-      $or: [
-        {
-          playersIds: { $in: [user.id] }
-        },
-        {
-          $and: [
-            { $or: [{ playersIds: { $size: 0 } }, { playersIds: { $size: 1 } }] },
+    query: [
+      {
+        $match: {
+          $or: [
             {
-              playersIds: { $not: { $in: [user.id] } }
+              playersIds: { $in: [user.id] }
+            },
+            {
+              $and: [
+                { $or: [{ playersIds: { $size: 0 } }, { playersIds: { $size: 1 } }] },
+                {
+                  playersIds: { $not: { $in: [user.id] } }
+                }
+              ]
             }
-          ]
+          ],
+          $sort: { playersIds: -1 },
+          isFinished: false
         }
-      ],
-      $sort: { playersIds: -1 },
-      isFinished: false
-    }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          let: { teacherId: '$teacherId' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ['$_id', '$$teacherId']
+                }
+              }
+            }
+          ],
+          as: 'teacher'
+        }
+      },
+      { $unwind: { path: '$teacher' } }
+    ]
   })
 
   const columns = [
     {
       title: 'Name',
       key: 'name',
-
-      ellipsis: true,
-      align: 'center',
       render: (data) => pug`
         Span #{data.name}
       `
     },
     {
+      title: 'Teacher',
+      key: 'teacher',
+      render: (data) => pug`
+        Span #{data.teacher.name}
+      `
+    },
+    {
       title: 'Created At',
       key: 'age',
-
-      align: 'center',
       render: (data) => pug`
         Span #{moment(data.createdAt).format('MM/DD/YYYY')}
       `
@@ -51,8 +74,6 @@ export default observer(() => {
     {
       title: 'Players count',
       key: 'playersCount',
-
-      align: 'center',
       render: (data) => pug`
         Span #{data.playersIds.length}
       `
@@ -60,7 +81,6 @@ export default observer(() => {
     {
       title: '',
       key: 'join',
-      align: 'center',
       render: (data) => pug`
         Button(onClick=()=>handleJoinGame(data)) #{data.playersIds.includes(user.id)? 'BACK' : 'JOIN'}
       `
@@ -82,6 +102,6 @@ export default observer(() => {
         Span.title Welcome!
         Span.text We don't have any free games, please wait
       else
-        Table(title='Games' dataSource=games.items columns=columns rowKey=item => item.id pagination=games.pagination)
+        Table(title='Games' dataSource=games.items columns=columns rowKey=item => item._id pagination=games.pagination)
   `
 })

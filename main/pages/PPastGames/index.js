@@ -75,7 +75,6 @@ const PPastGames = () => {
       key: 'name',
 
       ellipsis: true,
-      align: 'center',
       render: (data) => pug`
         Span.line.text #{data.name}
       `
@@ -85,7 +84,6 @@ const PPastGames = () => {
       key: 'teacher',
 
       ellipsis: true,
-      align: 'center',
       render: (data) => pug`
         Span.line.text #{data.teacher.name}
       `
@@ -93,8 +91,6 @@ const PPastGames = () => {
     {
       title: 'Created At',
       key: 'age',
-
-      align: 'center',
       render: (data) => pug`
         Span.text #{moment(data.createdAt).format('MM/DD/YYYY')}
       `
