@@ -1,46 +1,43 @@
 import React from 'react'
-import { observer, emit, useValue, useLocal } from 'startupjs'
 import './index.styl'
-import { Row, Div, Layout, SmartSidebar, Menu, Button, H1 } from '@startupjs/ui'
-import { faBars } from '@fortawesome/free-solid-svg-icons'
-import APP from '../../app.json'
+import { Platform, SafeAreaView, View } from 'react-native'
+import { observer, useLocal } from 'startupjs'
+import { PLogin } from 'main/pages'
+import { Loader } from 'components'
 
-const { displayName } = APP
-
-const APP_NAME = displayName.charAt(0).toUpperCase() + displayName.slice(1)
-
-const MenuItem = observer(({ url, children }) => {
-  const [currentUrl] = useLocal('$render.url')
-  return pug`
-    Menu.Item(
-      active=currentUrl === url
-      onPress=() => emit('url', url)
-    )= children
-  `
-})
+import Topbar from './Topbar'
 
 export default observer(function ({ children }) {
-  const [opened, $opened] = useValue(false)
+  const [{ user }] = useLocal('_session')
 
-  function renderSidebar () {
+  if (!user) {
     return pug`
-      Menu.sidebar
-        MenuItem(url='/') App
-        MenuItem(url='/about') About
+      PLogin
     `
   }
+  const main = pug`
+    View.layout
+      Topbar
+      View.wrapper
+        Loader
+        Main.content= children
+  `
+  return main
+})
 
+const Main = observer(({ children, style }) => {
   return pug`
-    Layout
-      SmartSidebar(
-        backgroundColor='#eeeeee'
-        path=$opened.path()
-        renderContent=renderSidebar
-      )
-        Row.menu
-          Button(color='secondaryText' icon=faBars onPress=() => $opened.set(!opened))
-          H1.logo= APP_NAME
-
-        Div.body= children
+    Wrapper
+      View(style=style)
+        = children
   `
 })
+
+const Wrapper =
+  Platform.OS === 'web'
+    ? React.memo(({ children }) => children)
+    : React.memo(
+      ({ children }) => pug`
+        SafeAreaView.page(style={ flex: 1, backgroundColor: '#fff' })= children
+  `
+    )

@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      //"clientHelpers": ["clientHelpers"],
+      "components": ["components"],
+      //"helpers": ["helpers"],
+      "main": ["main"],
+      "model": ["model"],
+      "serverHelpers": ["serverHelpers"],
+      "styles": ["styles"]
+    }
+  }
+}

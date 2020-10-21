@@ -1,0 +1,33 @@
+_textColor = black
+_primary = white
+
+_TopbarHeight = 8u
+
+.wrapper
+  width 100%
+  z-index 1
+  position relative
+.root
+  color _textColor
+  height _TopbarHeight
+  background white
+  justify-content center
+  align-items center
+  padding 1u 4u
+  border-bottom 1px solid black
+
+.content
+  width 100%
+  flex-direction row
+  align-items center
+  justify-content: space-between
+
+.menu
+  background white
+  border 1px solid #000
+  border-radius 5px
+  position absolute
+  top 100%
+  left 0
+  &.hide
+    display none

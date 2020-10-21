@@ -9,24 +9,30 @@ import { initApp } from 'startupjs/app/server'
 init({ orm })
 
 // Check '@startupjs/server' readme for the full API
-startupjsServer({
-  getHead,
-  appRoutes: [
-    ...getMainRoutes()
-  ]
-}, (ee, options) => {
-  initApp(ee)
+export default (done) => {
+  startupjsServer(
+    {
+      getHead,
+      appRoutes: [...getMainRoutes()],
+      sessionMaxAge: 1000 * 60 * 60 * 4 // 4 hours
+    },
+    (ee, options) => {
+      initApp(ee)
 
-  ee.on('routes', expressApp => {
-    expressApp.use('/api', api)
-  })
-})
+      ee.on('routes', (expressApp) => {
+        expressApp.use('/api', api)
+      })
 
-function getHead (appName) {
+      ee.on('done', () => {
+        done && done()
+      })
+    }
+  )
+}
+
+const getHead = (appName) => {
   return `
     <title>HelloWorld</title>
     <!-- Put vendor JS and CSS here -->
   `
 }
-
-export default function run () {}
